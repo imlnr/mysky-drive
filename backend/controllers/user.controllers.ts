@@ -22,9 +22,6 @@ export const sendOtp = async (req: Request, res: Response) => {
 
         if (!user) {
             // Create user if not exists
-            if (!name) {
-                return res.status(400).json({ msg: "Name is required for new user" });
-            }
             user = new userModel({ name, email, loginType });
             await user.save();
         }

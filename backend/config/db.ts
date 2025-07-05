@@ -1,5 +1,5 @@
-import { config as configDotenv } from "dotenv";
 import mongoose from "mongoose";
+import { config as configDotenv } from "dotenv";
 
 configDotenv(); // Load .env
 
