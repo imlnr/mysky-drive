@@ -2,11 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import userRouter from './routes/user.routes';
 import connectDB from './config/db';
+import { folderRouter } from './routes/folders.routes';
 const app = express()
 
 app.use(cors());
 app.use(express.json());
-app.use("/users", userRouter)
+app.use("/users", userRouter);
+app.use("/folders", folderRouter);
 app.get("/", (req, res) => {
     res.json({ msg: "Hello World" })
 })

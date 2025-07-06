@@ -8,7 +8,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     try {
         // Get the token from the Authorization header
         const authHeader = req.headers.authorization;
-        console.log("Auth Header:", authHeader);
+        // console.log("Auth Header:", authHeader);
 
         if (!authHeader) {
             return res.status(401).json({ message: "No authorization header provided" });
@@ -26,7 +26,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
         }
 
         // Verify the token
-        const decoded: any = jwt.verify(token, process.env.TOKEN_SECRET || "");
+        const decoded: any = jwt.verify(token, process.env.JWT_SECRET || "");
         if (!decoded || !decoded.userID) {
             return res.status(401).json({ message: "Invalid token payload" });
         }

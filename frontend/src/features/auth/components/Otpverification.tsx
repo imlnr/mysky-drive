@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { showToast } from '@/features/toast/toastUtils'
-import { sendOtp, verifyOtp } from '@/redux/action'
+import { sendOtp, verifyOtp } from '@/redux/AppReducer/action'
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 const Otpverification = () => {

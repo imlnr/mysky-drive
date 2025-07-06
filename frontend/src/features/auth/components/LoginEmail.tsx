@@ -5,10 +5,9 @@ import { Label } from '@/components/ui/label'
 import { useGoogleLogin } from '@react-oauth/google'
 import { useNavigate } from 'react-router'
 import Cookies from 'js-cookie'
-import axios from 'axios'
 import { useState } from 'react'
 import { showToast } from '@/features/toast/toastUtils'
-import { googleLogin, sendOtp } from '@/redux/action'
+import { googleLogin, sendOtp } from '@/redux/AppReducer/action'
 
 const LoginEmail = () => {
     const navigate = useNavigate();
