@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     updatedAt: { type: Date, default: Date.now },
     oAuthId: { type: String, default: null },
     loginType: { type: String, enum: ["email", "google"], required: true },
+    avatar: { type: String, default: null },
 },
     { versionKey: false }
 );

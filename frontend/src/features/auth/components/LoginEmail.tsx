@@ -8,7 +8,7 @@ import Cookies from 'js-cookie'
 import axios from 'axios'
 import { useState } from 'react'
 import { showToast } from '@/features/toast/toastUtils'
-import { sendOtp } from '@/redux/action'
+import { googleLogin, sendOtp } from '@/redux/action'
 
 const LoginEmail = () => {
     const navigate = useNavigate();
@@ -21,17 +21,13 @@ const LoginEmail = () => {
 
             // You can fetch user profile with tokenResponse.access_token
             const accessToken = tokenResponse.access_token;
-            Cookies.set("accessToken", accessToken, { expires: 1 / 24 }); // 1 hour expiration
-            Cookies.set("isLoggedIn", "true", { expires: 1 / 24 }); // 1 hour expiration
-            const response = await axios.get(
-                `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${accessToken}`
-            );
-
-            const userData = response.data;
-            console.log(userData)
-
-
-            navigate("/dashboard")
+            const response = await googleLogin(accessToken);
+            if (response) {
+                Cookies.set("accessToken", response.accessToken, { expires: 1 / 24 }); // 1 hour expiration
+                Cookies.set("refreshToken", response.refreshToken, { expires: 1 / 24 }); // 1 hour expiration
+                Cookies.set("isLoggedIn", "true", { expires: 1 / 24 }); // 1 hour expiration
+                navigate("/home")
+            }
         },
         onError: (error) => {
             console.log('Login Failed:', error);
@@ -48,9 +44,14 @@ const LoginEmail = () => {
         }
         // Navigate to the same route with email as query param
         try {
-            await sendOtp(email);
-            navigate(`/login?email=${encodeURIComponent(email)}`);
-            showToast("OTP sent to your email", "success")
+            const response = await sendOtp(email);
+            if (response) {
+                Cookies.set("accessToken", response.accessToken, { expires: 1 / 24 }); // 1 hour expiration
+                Cookies.set("refreshToken", response.refreshToken, { expires: 1 / 24 }); // 1 hour expiration
+                Cookies.set("isLoggedIn", "true", { expires: 1 / 24 }); // 1 hour expiration
+                navigate(`/login?email=${encodeURIComponent(email)}`);
+                showToast("OTP sent to your email", "success")
+            }
         } catch (error) {
             showToast("Something went wrong", "error")
         }

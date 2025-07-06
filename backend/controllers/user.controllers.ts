@@ -5,6 +5,7 @@ import otpModel from "../models/otp.models";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { config as configDotenv } from "dotenv";
+import axios from "axios";
 
 configDotenv(); // Load .env
 
@@ -84,9 +85,36 @@ export const verifyOtp = async (req: Request, res: Response) => {
         const userData = await userModel.findOne({ email });
         const accessToken = jwt.sign({ userID: userData?._id }, process.env.JWT_SECRET || "DRIVE_FOLDER_SECRET", { expiresIn: "7d" });
         const refreshToken = jwt.sign({ userID: userData?._id }, process.env.JWT_SECRET || "DRIVE_FOLDER_SECRET", { expiresIn: "1y" })
-        return res.status(200).json({ msg: "OTP verified successfully", accessToken, refreshToken });
+        return res.status(200).json({ msg: "OTP verified successfully", accessToken, refreshToken, user: userData });
     } catch (error) {
         return res.status(500).json({ msg: "Error verifying OTP", error });
     }
 };
 
+export const googleLogin = async (req: Request, res: Response) => {
+    const { token, loginType = "google" } = req.body;
+    try {
+        const response = await axios.get(
+            `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`
+        );
+        console.log(response.data)
+        const userData = response.data;
+        let user = await userModel.findOne({ email: userData.email });
+        if (!user) {
+            const newUser = new userModel({ email: userData.email, name: userData.name, avatar: userData.picture, loginType, oAuthId: userData?.id });
+            user = await newUser.save();
+        }
+        const accessToken = jwt.sign({ userID: user?._id }, process.env.JWT_SECRET || "DRIVE_FOLDER_SECRET", { expiresIn: "7d" });
+        const refreshToken = jwt.sign({ userID: user?._id }, process.env.JWT_SECRET || "DRIVE_FOLDER_SECRET", { expiresIn: "1y" });
+
+        return res.status(200).json({
+            msg: "Google login successful",
+            accessToken,
+            refreshToken,
+            user
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ msg: "Error during Google login", error });
+    }
+}

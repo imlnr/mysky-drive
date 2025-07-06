@@ -27,3 +27,15 @@ export const verifyOtp = async (email: string, otp: string) => {
         throw error;
     }
 }
+
+export const googleLogin = async (token: string) => {
+    try {
+        const response = await axios.post(`${url}/users/google-login`, { token });
+        if (response.data) {
+            return response.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
