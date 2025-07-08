@@ -3,19 +3,18 @@ import { BrowserRouter } from 'react-router'
 import MainRoutes from './router/MainRoutes'
 import { Toaster } from 'sonner'
 import { GoogleOAuthProvider } from '@react-oauth/google'
-import { store } from './redux/store'
-import { Provider } from 'react-redux'
+import { ThemeProvider } from './features/Theme/Theme-provider'
 function App() {
 
   return (
-    <Provider store={store}>
+    <ThemeProvider>
       <BrowserRouter>
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
           <MainRoutes />
           <Toaster richColors position="bottom-right" closeButton />
         </GoogleOAuthProvider>
       </BrowserRouter>
-    </Provider>
+    </ThemeProvider>
   )
 }
 

@@ -21,6 +21,7 @@ export interface AppState {
     user: User | null;
     isLoading: boolean;
     isError: string | null;
+    isLoginLoading: boolean;
     folders: Folder[];
     files: File[];
     currentFolder: Folder | null;

@@ -4,7 +4,9 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp
 import { showToast } from '@/features/toast/toastUtils'
 import { sendOtp, verifyOtp } from '@/redux/AppReducer/action'
 import { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router'
+import Cookies from 'js-cookie'
 const Otpverification = () => {
     const [value, setValue] = useState("")
     const [timer, setTimer] = useState(60)
@@ -12,6 +14,7 @@ const Otpverification = () => {
     const params = new URLSearchParams(location.search);
     const email = params.get("email");
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (timer === 0) return;
@@ -23,8 +26,14 @@ const Otpverification = () => {
 
     const handleVerifyOtp = async () => {
         try {
-            await verifyOtp(email || "", value)
-            navigate("/home")
+            const response = await dispatch(verifyOtp(email || "", value) as any);
+            if (response) {
+                Cookies.set("accessToken", response.accessToken, { expires: 7 }); // 7 days expiration
+                Cookies.set("refreshToken", response.refreshToken, { expires: 7 }); // 7 days expiration
+                Cookies.set("isLoggedIn", "true", { expires: 7 }); // 7 days expiration
+                navigate("/mydrive")
+            }
+            navigate("/mydrive")
         } catch (error) {
             showToast("Invalid OTP", "error")
         }

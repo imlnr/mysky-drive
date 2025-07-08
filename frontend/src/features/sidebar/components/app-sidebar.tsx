@@ -14,6 +14,8 @@ import {
 import { NavMain } from "./nav-main"
 import { NavUser } from "./nav-user"
 import { TeamSwitcher } from "./team-switcher"
+import type { AppState } from "@/lib/types"
+import { useSelector } from "react-redux"
 
 
 // This is sample data.
@@ -32,6 +34,7 @@ const navMain = [
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const user = useSelector((state: AppState) => state.user);
     return (
         <Sidebar collapsible="icon" {...props} >
             <SidebarHeader>
@@ -41,7 +44,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <NavMain items={navMain} />
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={{} as any} />
+                <NavUser user={user as any} />
             </SidebarFooter>
             <SidebarRail />
         </Sidebar>

@@ -1,22 +1,23 @@
 // import { GET_LOGOUT_USER } from '@/redux/AppReducer/action-types';
+import { GET_USER_LOGOUT } from '@/redux/AppReducer/action-types';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
-// import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const Logout = () => {
     const navigate = useNavigate();
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         // Simulate logout process
-        document.title = "PokéDex - logout"
+        document.title = "SkyDrive - logout"
         const timer = setTimeout(() => {
             // Clear any auth tokens or user data here
             Cookies.remove('accessToken');
             Cookies.remove('refreshToken');
             Cookies.remove("isLoggedIn")
-            // dispatch({ type: GET_LOGOUT_USER })
+            dispatch({ type: GET_USER_LOGOUT })
             // Redirect to login page
             navigate('/login');
         }, 2000);

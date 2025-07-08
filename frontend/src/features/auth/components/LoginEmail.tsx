@@ -8,11 +8,13 @@ import Cookies from 'js-cookie'
 import { useState } from 'react'
 import { showToast } from '@/features/toast/toastUtils'
 import { googleLogin, sendOtp } from '@/redux/AppReducer/action'
+import { useDispatch } from 'react-redux'
 
 const LoginEmail = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState<string>("");
     const [error, setError] = useState<string>("");
+    const dispatch = useDispatch();
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             console.log('Login Success:', tokenResponse);
@@ -20,12 +22,12 @@ const LoginEmail = () => {
 
             // You can fetch user profile with tokenResponse.access_token
             const accessToken = tokenResponse.access_token;
-            const response = await googleLogin(accessToken);
+            const response = await dispatch(googleLogin(accessToken) as any);
             if (response) {
-                Cookies.set("accessToken", response.accessToken, { expires: 1 / 24 }); // 1 hour expiration
-                Cookies.set("refreshToken", response.refreshToken, { expires: 1 / 24 }); // 1 hour expiration
-                Cookies.set("isLoggedIn", "true", { expires: 1 / 24 }); // 1 hour expiration
-                navigate("/home")
+                Cookies.set("accessToken", response.accessToken, { expires: 7 }); // 7 days expiration
+                Cookies.set("refreshToken", response.refreshToken, { expires: 7 }); // 7 days expiration
+                Cookies.set("isLoggedIn", "true", { expires: 7 }); // 7 days expiration
+                navigate("/mydrive")
             }
         },
         onError: (error) => {
@@ -45,9 +47,9 @@ const LoginEmail = () => {
         try {
             const response = await sendOtp(email);
             if (response) {
-                Cookies.set("accessToken", response.accessToken, { expires: 1 / 24 }); // 1 hour expiration
-                Cookies.set("refreshToken", response.refreshToken, { expires: 1 / 24 }); // 1 hour expiration
-                Cookies.set("isLoggedIn", "true", { expires: 1 / 24 }); // 1 hour expiration
+                Cookies.set("accessToken", response.accessToken, { expires: 7 }); // 7 days expiration
+                Cookies.set("refreshToken", response.refreshToken, { expires: 7 }); // 7 days expiration
+                Cookies.set("isLoggedIn", "true", { expires: 7 }); // 7 days expiration
                 navigate(`/login?email=${encodeURIComponent(email)}`);
                 showToast("OTP sent to your email", "success")
             }

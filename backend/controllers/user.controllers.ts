@@ -118,3 +118,13 @@ export const googleLogin = async (req: Request, res: Response) => {
         return res.status(500).json({ msg: "Error during Google login", error });
     }
 }
+
+export const getUser = async (req: Request, res: Response) => {
+    const { userID } = req.body;
+    try {
+        const response = await userModel.findById(userID);
+        return res.status(200).json({ msg: "User fetched successfully", user: response });
+    } catch (error) {
+        return res.status(500).json({ msg: "Error fetching user", error });
+    }
+}

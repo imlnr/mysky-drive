@@ -25,7 +25,7 @@ const FolderCard = ({ folder }: { folder: any }) => {
                 tabIndex={0}
                 onClick={() => navigate(`/mydrive/${folder._id}`)}
             >
-                <FolderIcon className="size-32  stroke-1 fill-muted-foreground stroke-muted-foreground mb-2" />
+                <FolderIcon className="w-5/5 h-full  stroke-1 fill-muted-foreground stroke-muted-foreground mb-2" />
                 <h1 className="text-base font-medium text-center truncate w-full" title={folder.name}>{folder.name}</h1>
             </div>
         </ContextMenuTrigger>
@@ -44,7 +44,7 @@ const FolderCard = ({ folder }: { folder: any }) => {
 const MainHome = () => {
     const dispatch = useDispatch();
     const folders = useSelector((state: AppState) => state.folders)
-    const loading = !folders || folders.length === 0; // Adjust if you have a real loading state
+    const loading = useSelector((state: AppState) => state.isLoading)// Adjust if you have a real loading state
 
     useEffect(() => {
         dispatch(getAllFolders() as any)
@@ -56,8 +56,8 @@ const MainHome = () => {
     );
 
     return (
-        <div className="w-full h-full p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        <div className="w-full h-full p-2">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {loading ? (
                     Array.from({ length: SKELETON_COUNT }).map((_, idx) => (
                         <div key={idx} className="aspect-square w-full flex flex-col items-center justify-center bg-card rounded-lg shadow-sm p-4">

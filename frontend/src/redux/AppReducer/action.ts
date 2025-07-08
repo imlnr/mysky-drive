@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import type { Dispatch } from "redux";
-import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS } from "./action-types";
+import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS, GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS } from "./action-types";
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -29,27 +29,32 @@ export const sendOtp = async (email: string) => {
     }
 }
 
-export const verifyOtp = async (email: string, otp: string) => {
+export const verifyOtp = (email: string, otp: string) => async (dispatch: Dispatch) => {
+    dispatch({ type: GET_USER_REQUEST });
     try {
         const response = await axios.post(`${url}/users/verify-otp`, { email, otp });
         if (response.data) {
+            dispatch({ type: GET_USER_SUCCESS, payload: response.data.user });
             return response.data;
         }
-    } catch (error) {
+    } catch (error: any) {
         console.log(error);
-        // return error;
+        dispatch({ type: GET_USER_FAILURE, payload: error.msg });
         throw error;
     }
 }
 
-export const googleLogin = async (token: string) => {
+export const googleLogin = (token: string) => async (dispatch: Dispatch) => {
+    dispatch({ type: GET_USER_REQUEST });
     try {
         const response = await axios.post(`${url}/users/google-login`, { token });
         if (response.data) {
+            dispatch({ type: GET_USER_SUCCESS, payload: response.data.user });
             return response.data;
         }
-    } catch (error) {
+    } catch (error: any) {
         console.log(error);
+        dispatch({ type: GET_USER_FAILURE, payload: error.msg });
         throw error;
     }
 }
@@ -81,6 +86,20 @@ export const getAllFolders = () => async (dispatch: Dispatch) => {
     } catch (error: any) {
         dispatch({ type: CREATE_FOLDER_FAILURE, payload: error.msg })
         console.log(error);
+        throw error;
+    }
+}
+
+export const getUser = () => async (dispatch: Dispatch) => {
+    dispatch({ type: GET_USER_REQUEST });
+    try {
+        const response = await axios.get(`${url}/users/get-user`, { headers: getHeaders() });
+        if (response.data) {
+            dispatch({ type: GET_USER_SUCCESS, payload: response.data.user });
+            return response.data;
+        }
+    } catch (error: any) {
+        dispatch({ type: GET_USER_FAILURE, payload: error.msg });
         throw error;
     }
 }
