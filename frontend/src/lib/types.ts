@@ -19,6 +19,8 @@ interface User {
 export interface AppState {
     isLoggedIn: boolean;
     user: User | null;
+    isLoading: boolean;
+    isError: string | null;
     folders: Folder[];
     files: File[];
     currentFolder: Folder | null;

@@ -1,7 +1,11 @@
+import MainHome from "@/features/home/MainHome"
+import SidebarWrapper from "@/features/sidebar/Sidebar"
 
 const Home = () => {
     return (
-        <div>Home</div>
+        <SidebarWrapper>
+            <MainHome />
+        </SidebarWrapper>
     )
 }
 
