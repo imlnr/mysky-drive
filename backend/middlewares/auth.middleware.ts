@@ -38,7 +38,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 
         // Add userID to request body
         req.body.userID = decoded.userID;
-        console.log("Decoded userID:", decoded.userID);
+        // console.log("Decoded userID:", decoded.userID);
         next();
     } catch (error: any) {
         console.error('Auth Error:', error.message);

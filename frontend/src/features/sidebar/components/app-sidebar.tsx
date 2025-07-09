@@ -2,7 +2,7 @@
 import React from "react"
 import {
     HomeIcon,
-    User2
+    Share2Icon,
 } from "lucide-react"
 import {
     Sidebar,
@@ -26,9 +26,9 @@ const navMain = [
         icon: HomeIcon,
     },
     {
-        title: "Profile",
-        url: "/profile",
-        icon: User2,
+        title: "Shared with me",
+        url: "/shared-with-me",
+        icon: Share2Icon,
     }
 ]
 

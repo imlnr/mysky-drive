@@ -22,3 +22,24 @@ export const getAllFolders = async (req: Request, res: Response) => {
         res.status(500).json({ msg: "Error fetching folders", error });
     }
 }
+
+export const updateFolder = async (req: Request, res: Response) => {
+    const updateData = req.body;
+    const { folderID } = req.params;
+    try {
+        const folder = await folderModel.findByIdAndUpdate(folderID, updateData, { new: true });
+        res.status(200).json({ msg: "Folder updated successfully", folder });
+    } catch (error) {
+        res.status(500).json({ msg: "Error updating folder", error });
+    }
+}
+
+export const deleteFolder = async (req: Request, res: Response) => {
+    const { folderID } = req.params;
+    try {
+        await folderModel.findByIdAndDelete(folderID);
+        res.status(200).json({ msg: "Folder deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: "Error deleting folder", error });
+    }
+}

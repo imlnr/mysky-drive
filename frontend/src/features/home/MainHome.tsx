@@ -1,45 +1,14 @@
 import type { AppState } from '@/lib/types'
 import { getAllFolders } from '@/redux/AppReducer/action';
-import { FolderIcon } from 'lucide-react';
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-    ContextMenu,
-    ContextMenuTrigger,
-    ContextMenuContent,
-    ContextMenuItem,
-    ContextMenuSeparator,
-    ContextMenuLabel,
-} from '@/components/ui/context-menu';
-import { useNavigate } from 'react-router-dom';
+import FolderCard from './components/FolderCard';
+
 
 const SKELETON_COUNT = 8;
 
-const FolderCard = ({ folder }: { folder: any }) => {
-    const navigate = useNavigate();
-    return <ContextMenu>
-        <ContextMenuTrigger asChild>
-            <div
-                className="aspect-square w-full flex flex-col items-center justify-center bg-card rounded-lg shadow-sm p-4 cursor-pointer transition hover:shadow-md hover:bg-accent select-none"
-                tabIndex={0}
-                onClick={() => navigate(`/mydrive/${folder._id}`)}
-            >
-                <FolderIcon className="w-5/5 h-full  stroke-1 fill-muted-foreground stroke-muted-foreground mb-2" />
-                <h1 className="text-base font-medium text-center truncate w-full" title={folder.name}>{folder.name}</h1>
-            </div>
-        </ContextMenuTrigger>
-        <ContextMenuContent>
-            <ContextMenuLabel>Folder Actions</ContextMenuLabel>
-            <ContextMenuSeparator />
-            <ContextMenuItem onClick={() => alert(`Open ${folder.name}`)}>Open </ContextMenuItem>
-            <ContextMenuItem onClick={() => alert(`Rename ${folder.name}`)}>Rename</ContextMenuItem>
-            <ContextMenuItem onClick={() => alert(`Delete ${folder.name}`)} variant="destructive">Delete</ContextMenuItem>
-            <ContextMenuSeparator />
-            <ContextMenuItem onClick={() => alert(`Share ${folder.name}`)}>Share</ContextMenuItem>
-        </ContextMenuContent>
-    </ContextMenu>
-};
+
 
 const MainHome = () => {
     const dispatch = useDispatch();

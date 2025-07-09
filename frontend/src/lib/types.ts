@@ -1,8 +1,24 @@
 
-interface Folder {
+export interface Folder {
     _id: string;
     name: string;
     owner: string;
+    createdAt: Date;
+    updatedAt: Date;
+    parentFolder: string | null;
+    folderColor: string;
+}
+
+export interface File {
+    _id: string;
+    name: string;
+    owner: string;
+    folderId: string;
+    size: number;
+    type: string;
+    url: string;
+    imagekitFileId: string;
+    isPublic: boolean;
     createdAt: Date;
     updatedAt: Date;
 }

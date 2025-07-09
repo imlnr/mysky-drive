@@ -1,5 +1,5 @@
 import type { AppState } from "@/lib/types";
-import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS, GET_USER_FAILURE, GET_USER_LOGOUT, GET_USER_REQUEST, GET_USER_SUCCESS } from "./action-types";
+import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, DELETE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS, GET_USER_FAILURE, GET_USER_LOGOUT, GET_USER_REQUEST, GET_USER_SUCCESS, UPDATE_FOLDER_SUCCESS, UPLOAD_FILES_REQUEST, UPLOAD_FILES_SUCCESS, UPLOAD_FILES_FAILURE, GET_FILES_SUCCESS } from "./action-types";
 
 const initialState: AppState = {
     isLoggedIn: false,
@@ -34,6 +34,19 @@ export const reducer = (state: AppState = initialState, action: any): AppState =
             return { ...state, isLoading: false, isError: action.payload };
         case GET_FOLDERS_SUCCESS:
             return { ...state, isLoading: false, folders: action.payload };
+        case UPDATE_FOLDER_SUCCESS:
+            return { ...state, isLoading: false, folders: state.folders.map(folder => folder._id === action.payload._id ? action.payload : folder) };
+        case DELETE_FOLDER_SUCCESS:
+            return { ...state, isLoading: false, folders: state.folders.filter(folder => folder._id !== action.payload) };
+        case UPLOAD_FILES_REQUEST:
+            return { ...state, isLoading: true, isError: "" };
+        case UPLOAD_FILES_SUCCESS:
+            return { ...state, isLoading: false, files: [...state.files, ...action.payload] };
+        case UPLOAD_FILES_FAILURE:
+            return { ...state, isLoading: false, isError: action.payload };
+        case GET_FILES_SUCCESS:
+            return { ...state, isLoading: false, files: action.payload };
+
         default:
             return state;
     }
