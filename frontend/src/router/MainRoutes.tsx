@@ -5,16 +5,17 @@ import LoginPage from '@/pages/Login'
 import Logout from '@/pages/Logout'
 import SharedWithMe from '@/pages/SharedWithMe'
 import { Routes, Route } from 'react-router-dom'
+import PrivateRoutes from './PrivateRoutes'
 
 const MainRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<Landing />} />
-            <Route path='/mydrive' element={<Home />} />
+            <Route path='/mydrive' element={<PrivateRoutes><Home /></PrivateRoutes>} />
             <Route path='/login' element={<LoginPage />} />
-            <Route path='/mydrive/:id' element={<Folder />} />
-            <Route path='/logout' element={<Logout />} />
-            <Route path='/shared-with-me' element={<SharedWithMe />} />
+            <Route path='/mydrive/:id' element={<PrivateRoutes><Folder /></PrivateRoutes>} />
+            <Route path='/logout' element={<PrivateRoutes><Logout /></PrivateRoutes>} />
+            <Route path='/shared-with-me' element={<PrivateRoutes><SharedWithMe /></PrivateRoutes>} />
         </Routes>
     )
 }

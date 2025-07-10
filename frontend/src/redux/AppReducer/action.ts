@@ -5,8 +5,8 @@ import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, DE
 
 const url = import.meta.env.VITE_API_URL;
 
-const token = Cookies.get('accessToken');
 const getHeaders = () => {
+    const token = Cookies.get('accessToken');
     if (!token) {
         throw new Error("No login data found in cookies");
     }
@@ -75,15 +75,20 @@ export const createFolder = (name: string) => async (dispatch: Dispatch) => {
 }
 
 export const getAllFolders = () => async (dispatch: Dispatch) => {
-    dispatch({ type: CREATE_FOLDER_REQUEST });;
+    console.log('getAllFolders: Starting API call')
+    dispatch({ type: CREATE_FOLDER_REQUEST });
     try {
-        const response = await axios.get(`${url}/folders/get-all-folders`, { headers: getHeaders() });
+        const headers = getHeaders()
+        console.log('getAllFolders: Headers =', headers)
+        const response = await axios.get(`${url}/folders/get-all-folders`, { headers });
+        console.log('getAllFolders: Response =', response.data)
         if (response.data) {
             dispatch({ type: GET_FOLDERS_SUCCESS, payload: response.data?.folders })
             return response.data;
         }
 
     } catch (error: any) {
+        console.log('getAllFolders: Error =', error)
         dispatch({ type: CREATE_FOLDER_FAILURE, payload: error.msg })
         console.log(error);
         throw error;
@@ -163,7 +168,7 @@ export const uploadFiles = (files: File[], folderId: string) => async (dispatch:
             {
                 headers: {
                     "Content-Type": "multipart/form-data",
-                    ...(token && { Authorization: `Bearer ${token}` }),
+                    ...(getHeaders() && { Authorization: getHeaders().Authorization }),
                 },
             }
         );

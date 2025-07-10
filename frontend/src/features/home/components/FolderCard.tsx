@@ -17,6 +17,7 @@ import { useDispatch } from 'react-redux';
 import { deleteFolder, updateFolder } from '@/redux/AppReducer/action';
 import type { Folder } from '@/lib/types';
 import { useState } from 'react';
+import { UniversalAlert } from '@/features/components/UniversalAlert';
 
 const FOLDER_COLORS = [
     { name: 'Indigo', class: 'bg-indigo-500' },
@@ -46,6 +47,7 @@ const FolderCard = ({ folder }: { folder: Folder }) => {
     const dispatch = useDispatch();
     const [isRenaming, setIsRenaming] = useState(false);
     const [newName, setNewName] = useState(folder.name);
+    const [deleteAlert, setDeleteAlert] = useState(false);
     const [selectedColor, setSelectedColor] = useState(folder.folderColor || 'indigo-500');
 
     const colorClasses = COLOR_MAP[selectedColor] || COLOR_MAP['indigo-500'];
@@ -78,89 +80,99 @@ const FolderCard = ({ folder }: { folder: Folder }) => {
     };
 
     return (
-        <ContextMenu>
-            <ContextMenuTrigger asChild>
-                <div
-                    className={`aspect-square w-full flex flex-col items-center justify-center bg-card rounded-lg shadow-sm p-4 cursor-pointer transition hover:shadow-md hover:bg-accent select-none `}
-                    tabIndex={0}
-                    onClick={() => navigate(`/mydrive/${folder._id}`)}
-                >
-                    <FolderIcon className={`w-5/5 h-full stroke-1 mb-2 ${colorClasses}`} />
-                    {isRenaming ? (
-                        <div className="flex items-center w-full gap-2">
-                            <input
-                                className="text-base font-medium text-center truncate w-full border rounded px-1 py-0.5"
-                                value={newName}
-                                autoFocus
-                                onClick={(e) => e.stopPropagation()}
-                                onChange={(e) => setNewName(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') handleRenameSave();
-                                    if (e.key === 'Escape') handleRenameCancel();
-                                }}
-                                placeholder="Rename folder"
-                                aria-label="Rename folder"
-                            />
-                            <button
-                                className="text-green-600 cursor-pointer"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRenameSave();
-                                }}
-                                title="Save"
-                            >
-                                ✓
-                            </button>
-                            <button
-                                className="text-red-600 cursor-pointer"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRenameCancel();
-                                }}
-                                title="Cancel"
-                            >
-                                ✗
-                            </button>
-                        </div>
-                    ) : (
-                        <h1 className="text-base font-medium text-center truncate w-full" title={folder.name}>
-                            {folder.name}
-                        </h1>
-                    )}
-                </div>
-            </ContextMenuTrigger>
-            <ContextMenuContent>
-                <ContextMenuLabel>Folder Actions</ContextMenuLabel>
-                <ContextMenuSeparator />
-                <ContextMenuItem onClick={() => navigate(`/mydrive/${folder._id}`)}>Open</ContextMenuItem>
-                <ContextMenuItem onClick={handleRenameClick}>Rename</ContextMenuItem>
-                <ContextMenuItem onClick={handleDelete} variant="destructive">Delete</ContextMenuItem>
-                <ContextMenuItem onClick={() => { }}>Download</ContextMenuItem>
-                <ContextMenuSeparator />
-                <ContextMenuItem onClick={() => alert(`Share ${folder.name}`)}>Share</ContextMenuItem>
-
-                <ContextMenuSub>
-                    <ContextMenuSubTrigger>Change Color</ContextMenuSubTrigger>
-                    <ContextMenuSubContent>
-                        <ContextMenuRadioGroup value={selectedColor}>
-                            {FOLDER_COLORS.map((color) => (
-                                <ContextMenuRadioItem
-                                    key={color.class}
-                                    value={color.class}
-                                    onClick={() => handleColorChange(color.class)}
+        <>
+            <ContextMenu>
+                <ContextMenuTrigger asChild>
+                    <div
+                        className={`aspect-square w-full flex flex-col items-center justify-center bg-card rounded-lg shadow-sm p-4 cursor-pointer transition hover:shadow-md hover:bg-accent select-none `}
+                        tabIndex={0}
+                        onClick={() => navigate(`/mydrive/${folder._id}`)}
+                    >
+                        <FolderIcon className={`w-5/5 h-full stroke-1 mb-2 ${colorClasses}`} />
+                        {isRenaming ? (
+                            <div className="flex items-center w-full gap-2">
+                                <input
+                                    className="text-base font-medium text-center truncate w-full border rounded px-1 py-0.5"
+                                    value={newName}
+                                    autoFocus
+                                    onClick={(e) => e.stopPropagation()}
+                                    onChange={(e) => setNewName(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') handleRenameSave();
+                                        if (e.key === 'Escape') handleRenameCancel();
+                                    }}
+                                    placeholder="Rename folder"
+                                    aria-label="Rename folder"
+                                />
+                                <button
+                                    className="text-green-600 cursor-pointer"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRenameSave();
+                                    }}
+                                    title="Save"
                                 >
-                                    <span
-                                        className={`inline-block w-4 h-4 rounded-full mr-2 align-middle border ${color.class}`}
-                                        title={`Select color ${color.name}`}
-                                    />
-                                    {color.name}
-                                </ContextMenuRadioItem>
-                            ))}
-                        </ContextMenuRadioGroup>
-                    </ContextMenuSubContent>
-                </ContextMenuSub>
-            </ContextMenuContent>
-        </ContextMenu>
+                                    ✓
+                                </button>
+                                <button
+                                    className="text-red-600 cursor-pointer"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRenameCancel();
+                                    }}
+                                    title="Cancel"
+                                >
+                                    ✗
+                                </button>
+                            </div>
+                        ) : (
+                            <h1 className="text-base font-medium text-center truncate w-full" title={folder.name}>
+                                {folder.name}
+                            </h1>
+                        )}
+                    </div>
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                    <ContextMenuLabel>Folder Actions</ContextMenuLabel>
+                    <ContextMenuSeparator />
+                    <ContextMenuItem onClick={() => navigate(`/mydrive/${folder._id}`)}>Open</ContextMenuItem>
+                    <ContextMenuItem onClick={handleRenameClick}>Rename</ContextMenuItem>
+                    <ContextMenuItem onClick={() => setDeleteAlert(true)} variant="destructive">Delete</ContextMenuItem>
+                    <ContextMenuItem onClick={() => { }}>Download</ContextMenuItem>
+                    <ContextMenuSeparator />
+                    <ContextMenuItem onClick={() => alert(`Share ${folder.name}`)}>Share</ContextMenuItem>
+
+                    <ContextMenuSub>
+                        <ContextMenuSubTrigger>Change Color</ContextMenuSubTrigger>
+                        <ContextMenuSubContent>
+                            <ContextMenuRadioGroup value={selectedColor}>
+                                {FOLDER_COLORS.map((color) => (
+                                    <ContextMenuRadioItem
+                                        key={color.class}
+                                        value={color.class}
+                                        onClick={() => handleColorChange(color.class)}
+                                    >
+                                        <span
+                                            className={`inline-block w-4 h-4 rounded-full mr-2 align-middle border ${color.class}`}
+                                            title={`Select color ${color.name}`}
+                                        />
+                                        {color.name}
+                                    </ContextMenuRadioItem>
+                                ))}
+                            </ContextMenuRadioGroup>
+                        </ContextMenuSubContent>
+                    </ContextMenuSub>
+                </ContextMenuContent>
+            </ContextMenu>
+            <UniversalAlert
+                open={deleteAlert}
+                onOpenChange={setDeleteAlert}
+                title="Delete Folder"
+                continueVariant='destructive'
+                description="Are you sure you want to delete this folder?"
+                onContinue={handleDelete}
+            />
+        </>
     );
 };
 

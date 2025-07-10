@@ -19,7 +19,6 @@ const LoginEmail = () => {
         onSuccess: async (tokenResponse) => {
             console.log('Login Success:', tokenResponse);
 
-
             // You can fetch user profile with tokenResponse.access_token
             const accessToken = tokenResponse.access_token;
             const response = await dispatch(googleLogin(accessToken) as any);

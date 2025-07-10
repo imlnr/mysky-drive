@@ -13,11 +13,17 @@ const SKELETON_COUNT = 8;
 const MainHome = () => {
     const dispatch = useDispatch();
     const folders = useSelector((state: AppState) => state.folders)
-    const loading = useSelector((state: AppState) => state.isLoading)// Adjust if you have a real loading state
+    const loading = useSelector((state: AppState) => state.isLoading)
+    const isLoggedIn = useSelector((state: AppState) => state.isLoggedIn)
 
     useEffect(() => {
-        dispatch(getAllFolders() as any)
-    }, [])
+        console.log('MainHome: isLoggedIn =', isLoggedIn)
+        // Only make API call if user is logged in
+        if (isLoggedIn) {
+            console.log('MainHome: Dispatching getAllFolders')
+            dispatch(getAllFolders() as any)
+        }
+    }, [dispatch, isLoggedIn])
 
     const folderCards = useMemo(() =>
         folders.map((folder) => <FolderCard key={folder._id} folder={folder} />),

@@ -4,11 +4,11 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { AppSidebar } from "./components/app-sidebar"
-import { useEffect, type ReactNode } from "react"
+import { type ReactNode } from "react"
 import { Separator } from "@/components/ui/separator"
 import { ModeToggle } from "../Theme/Mode-toggle"
-import { useDispatch } from "react-redux"
-import { getUser } from "@/redux/AppReducer/action"
+// import { useDispatch } from "react-redux"
+// import { getUser } from "@/redux/AppReducer/action"
 // import { getUser } from "@/redux/AppReducer/action"
 
 
@@ -18,10 +18,10 @@ interface SidebarWrapperProps {
 }
 
 export default function SidebarWrapper({ children }: SidebarWrapperProps) {
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(getUser() as any);
-    }, [])
+    // const dispatch = useDispatch();
+    // useEffect(() => {
+    //     dispatch(getUser() as any);
+    // }, [])
 
     return (
         <SidebarProvider>

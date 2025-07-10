@@ -1,8 +1,9 @@
 import type { AppState } from "@/lib/types";
 import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, DELETE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS, GET_USER_FAILURE, GET_USER_LOGOUT, GET_USER_REQUEST, GET_USER_SUCCESS, UPDATE_FOLDER_SUCCESS, UPLOAD_FILES_REQUEST, UPLOAD_FILES_SUCCESS, UPLOAD_FILES_FAILURE, GET_FILES_SUCCESS } from "./action-types";
+import Cookies from "js-cookie";
 
 const initialState: AppState = {
-    isLoggedIn: false,
+    isLoggedIn: false || Boolean(Cookies.get("isLoggedIn")),
     user: null,
     folders: [],
     files: [],
@@ -21,7 +22,7 @@ export const reducer = (state: AppState = initialState, action: any): AppState =
         case GET_USER_REQUEST:
             return { ...state, isLoginLoading: true, isError: "", user: null }
         case GET_USER_SUCCESS:
-            return { ...state, isLoginLoading: false, user: action.payload }
+            return { ...state, isLoginLoading: false, isLoggedIn: true, user: action.payload }
         case GET_USER_FAILURE:
             return { ...state, isLoginLoading: false, isError: action.payload };
         case GET_USER_LOGOUT:
