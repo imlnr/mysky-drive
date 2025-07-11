@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import type { Dispatch } from "redux";
-import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, DELETE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS, GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, UPDATE_FOLDER_SUCCESS, UPLOAD_FILES_REQUEST, UPLOAD_FILES_SUCCESS, UPLOAD_FILES_FAILURE, GET_FILES_SUCCESS } from "./action-types";
+import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, DELETE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS, GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, UPDATE_FOLDER_SUCCESS, UPLOAD_FILES_REQUEST, UPLOAD_FILES_SUCCESS, UPLOAD_FILES_FAILURE, GET_FILES_SUCCESS, DELETE_FILE_SUCCESS } from "./action-types";
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -151,7 +151,7 @@ export const addFilesToFolder = (files: File[], folderId: string) => async (disp
 }
 
 export const uploadFiles = (files: File[], folderId: string) => async (dispatch: Dispatch) => {
-    dispatch({ type: UPLOAD_FILES_REQUEST });
+    // dispatch({ type: UPLOAD_FILES_REQUEST });
 
     try {
         // First, upload files to get the file data (URLs, etc.)
@@ -198,6 +198,19 @@ export const getFiles = (folderId: string) => async (dispatch: Dispatch) => {
         const response = await axios.get(`${url}/files/get-files/${folderId}`, { headers: getHeaders() });
         if (response.data) {
             dispatch({ type: GET_FILES_SUCCESS, payload: response.data.files });
+            return response.data;
+        }
+    } catch (error: any) {
+        dispatch({ type: UPLOAD_FILES_FAILURE, payload: error.msg });
+        throw error;
+    }
+}
+
+export const deleteFile = (fileIds: string[]) => async (dispatch: Dispatch) => {
+    try {
+        const response = await axios.delete(`${url}/files/delete-file`, { data: { fileIds }, headers: getHeaders() });
+        if (response.data) {
+            dispatch({ type: DELETE_FILE_SUCCESS, payload: fileIds });
             return response.data;
         }
     } catch (error: any) {

@@ -19,7 +19,7 @@ const Folder = () => {
         if (folderId) {
             dispatch(getFiles(folderId) as any);
         }
-    }, [folderId]);
+    }, [folderId, dispatch]);
     return (
         <SidebarWrapper>
             <FolderHeader view={view} onViewChange={setView} />

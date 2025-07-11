@@ -10,6 +10,9 @@ import {
 import { Download, Share, Trash2, Edit, Eye, Copy } from 'lucide-react';
 import type { File } from '@/lib/types';
 import type { ViewType } from './ViewSwitcher';
+import { UniversalAlert } from '@/features/components/UniversalAlert';
+import { useDispatch } from 'react-redux';
+import { deleteFile } from '@/redux/AppReducer/action';
 
 interface FileCardProps {
     file: File;
@@ -19,6 +22,8 @@ interface FileCardProps {
 export const FileCard = React.memo(({ file, view }: FileCardProps) => {
     const [isRenaming, setIsRenaming] = useState(false);
     const [newName, setNewName] = useState(file.name);
+    const [deleteAlert, setDeleteAlert] = useState(false);
+    const dispatch = useDispatch();
 
     const isImageFile = (fileType: string) => {
         return fileType.startsWith('image/');
@@ -41,7 +46,12 @@ export const FileCard = React.memo(({ file, view }: FileCardProps) => {
 
     const handleDelete = async () => {
         // TODO: Implement delete functionality
+        await dispatch(deleteFile([file._id]) as any)
         console.log('Delete file:', file._id);
+    };
+
+    const handleDeleteClick = () => {
+        setDeleteAlert(true);
     };
 
     const handleDownload = () => {
@@ -99,35 +109,45 @@ export const FileCard = React.memo(({ file, view }: FileCardProps) => {
     );
 
     const renderContextMenu = () => (
-        <ContextMenuContent>
-            <ContextMenuLabel>File Actions</ContextMenuLabel>
-            <ContextMenuSeparator />
-            <ContextMenuItem onClick={handlePreview}>
-                <Eye className="mr-2 h-4 w-4" />
-                Preview
-            </ContextMenuItem>
-            <ContextMenuItem onClick={handleDownload}>
-                <Download className="mr-2 h-4 w-4" />
-                Download
-            </ContextMenuItem>
-            <ContextMenuItem onClick={handleRenameClick}>
-                <Edit className="mr-2 h-4 w-4" />
-                Rename
-            </ContextMenuItem>
-            <ContextMenuItem onClick={handleCopyLink}>
-                <Copy className="mr-2 h-4 w-4" />
-                Copy Link
-            </ContextMenuItem>
-            <ContextMenuSeparator />
-            <ContextMenuItem onClick={handleShare}>
-                <Share className="mr-2 h-4 w-4" />
-                Share
-            </ContextMenuItem>
-            <ContextMenuItem onClick={handleDelete} variant="destructive">
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete
-            </ContextMenuItem>
-        </ContextMenuContent>
+        <>
+            <ContextMenuContent>
+                <ContextMenuLabel>File Actions</ContextMenuLabel>
+                <ContextMenuSeparator />
+                <ContextMenuItem onClick={handlePreview}>
+                    <Eye className="mr-2 h-4 w-4" />
+                    Preview
+                </ContextMenuItem>
+                <ContextMenuItem onClick={handleDownload}>
+                    <Download className="mr-2 h-4 w-4" />
+                    Download
+                </ContextMenuItem>
+                <ContextMenuItem onClick={handleRenameClick}>
+                    <Edit className="mr-2 h-4 w-4" />
+                    Rename
+                </ContextMenuItem>
+                <ContextMenuItem onClick={handleCopyLink}>
+                    <Copy className="mr-2 h-4 w-4" />
+                    Copy Link
+                </ContextMenuItem>
+                <ContextMenuSeparator />
+                <ContextMenuItem onClick={handleShare}>
+                    <Share className="mr-2 h-4 w-4" />
+                    Share
+                </ContextMenuItem>
+                <ContextMenuItem onClick={handleDeleteClick} variant="destructive">
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Delete
+                </ContextMenuItem>
+            </ContextMenuContent>
+            <UniversalAlert
+                open={deleteAlert}
+                onOpenChange={setDeleteAlert}
+                title="Delete File"
+                continueVariant='destructive'
+                description={`Are you sure you want to delete "${file.name}"? This action cannot be undone.`}
+                onContinue={handleDelete}
+            />
+        </>
     );
 
     if (view === 'list') {

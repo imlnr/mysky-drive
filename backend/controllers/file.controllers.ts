@@ -59,3 +59,22 @@ export const getFiles = async (req: Request, res: Response) => {
         res.status(500).json({ msg: "Error getting files", error: error.message });
     }
 }
+export const deleteFile = async (req: Request, res: Response) => {
+    const { fileIds } = req.body; // Expecting an array of file IDs in the request body
+    const userId = req.body.userID;
+
+    if (!Array.isArray(fileIds) || fileIds.length === 0) {
+        return res.status(400).json({ msg: "fileIds array is required in the request body" });
+    }
+
+    try {
+        const result = await fileModel.deleteMany({ _id: { $in: fileIds }, owner: userId });
+        res.status(200).json({
+            msg: "Files deleted successfully",
+            deletedCount: result.deletedCount
+        });
+    } catch (error: any) {
+        console.error("Error deleting files:", error);
+        res.status(500).json({ msg: "Error deleting files", error: error.message });
+    }
+}
