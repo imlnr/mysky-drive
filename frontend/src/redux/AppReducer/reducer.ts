@@ -1,5 +1,5 @@
 import type { AppState } from "@/lib/types";
-import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, DELETE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS, GET_USER_FAILURE, GET_USER_LOGOUT, GET_USER_REQUEST, GET_USER_SUCCESS, UPDATE_FOLDER_SUCCESS, UPLOAD_FILES_REQUEST, UPLOAD_FILES_SUCCESS, UPLOAD_FILES_FAILURE, GET_FILES_SUCCESS, DELETE_FILE_SUCCESS } from "./action-types";
+import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, DELETE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS, GET_USER_FAILURE, GET_USER_LOGOUT, GET_USER_REQUEST, GET_USER_SUCCESS, UPDATE_FOLDER_SUCCESS, UPLOAD_FILES_REQUEST, UPLOAD_FILES_SUCCESS, UPLOAD_FILES_FAILURE, GET_FILES_SUCCESS, DELETE_FILE_SUCCESS, UPDATE_FILE_SUCCESS } from "./action-types";
 import Cookies from "js-cookie";
 
 const initialState: AppState = {
@@ -49,6 +49,8 @@ export const reducer = (state: AppState = initialState, action: any): AppState =
             return { ...state, isLoading: false, files: action.payload };
         case DELETE_FILE_SUCCESS:
             return { ...state, isLoading: false, files: state.files.filter(file => !action.payload.includes(file._id)) };
+        case UPDATE_FILE_SUCCESS:
+            return { ...state, isLoading: false, files: state.files.map(file => file._id === action.payload._id ? action.payload : file) };
         default:
             return state;
     }

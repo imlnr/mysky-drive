@@ -78,3 +78,17 @@ export const deleteFile = async (req: Request, res: Response) => {
         res.status(500).json({ msg: "Error deleting files", error: error.message });
     }
 }
+
+export const updateFile = async (req: Request, res: Response) => {
+    try {
+        const fileId = req.params.fileId;
+        const { name, description, isPublic } = req.body;
+        const userId = req.body.userID;
+
+        const file = await fileModel.findByIdAndUpdate(fileId, { name, description, isPublic }, { new: true });
+        res.status(200).json({ file });
+    } catch (error: any) {
+        console.error("Error updating file:", error);
+        res.status(500).json({ msg: "Error updating file", error: error.message });
+    }
+}

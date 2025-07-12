@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import type { Dispatch } from "redux";
-import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, DELETE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS, GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, UPDATE_FOLDER_SUCCESS, UPLOAD_FILES_REQUEST, UPLOAD_FILES_SUCCESS, UPLOAD_FILES_FAILURE, GET_FILES_SUCCESS, DELETE_FILE_SUCCESS } from "./action-types";
+import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, DELETE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS, GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, UPDATE_FOLDER_SUCCESS, UPLOAD_FILES_REQUEST, UPLOAD_FILES_SUCCESS, UPLOAD_FILES_FAILURE, GET_FILES_SUCCESS, DELETE_FILE_SUCCESS, UPDATE_FILE_SUCCESS } from "./action-types";
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -216,5 +216,17 @@ export const deleteFile = (fileIds: string[]) => async (dispatch: Dispatch) => {
     } catch (error: any) {
         dispatch({ type: UPLOAD_FILES_FAILURE, payload: error.msg });
         throw error;
+    }
+}
+
+export const updateFile = (fileId: string, updateData: any) => async (dispatch: Dispatch) => {
+    try {
+        const response = await axios.put(`${url}/files/update-file/${fileId}`, updateData, { headers: getHeaders() });
+        if (response.data) {
+            dispatch({ type: UPDATE_FILE_SUCCESS, payload: response.data.file });
+            return response.data;
+        }
+    } catch (error: any) {
+        dispatch({ type: UPLOAD_FILES_FAILURE, payload: error.msg });
     }
 }

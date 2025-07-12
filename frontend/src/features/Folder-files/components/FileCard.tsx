@@ -12,7 +12,7 @@ import type { File } from '@/lib/types';
 import type { ViewType } from './ViewSwitcher';
 import { UniversalAlert } from '@/features/components/UniversalAlert';
 import { useDispatch } from 'react-redux';
-import { deleteFile } from '@/redux/AppReducer/action';
+import { deleteFile, updateFile } from '@/redux/AppReducer/action';
 
 interface FileCardProps {
     file: File;
@@ -35,6 +35,7 @@ export const FileCard = React.memo(({ file, view }: FileCardProps) => {
         setIsRenaming(false);
         if (newName.trim() && newName !== file.name) {
             // TODO: Implement rename functionality
+            await dispatch(updateFile(file._id, { name: newName }) as any)
             console.log('Rename to:', newName);
         }
     };
