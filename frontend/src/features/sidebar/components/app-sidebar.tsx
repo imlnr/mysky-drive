@@ -26,10 +26,20 @@ const navMain = [
         icon: HomeIcon,
     },
     {
-        title: "Shared with me",
-        url: "/shared-with-me",
+        title: "Shared",
+        url: "#",
+        items: [
+            {
+                title: "Shared with me",
+                url: "/shared-with-me",
+            },
+            {
+                title: "Shared by me",
+                url: "/shared-by-me",
+            },
+        ],
         icon: Share2Icon,
-    }
+    },
 ]
 
 
