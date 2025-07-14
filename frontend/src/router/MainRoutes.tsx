@@ -7,6 +7,7 @@ import SharedWithMe from '@/pages/SharedWithMe'
 import { Routes, Route } from 'react-router-dom'
 import PrivateRoutes from './PrivateRoutes'
 import SharedByMe from '@/pages/SharedByMe'
+import Bin from '@/pages/Bin'
 
 const MainRoutes = () => {
     return (
@@ -18,6 +19,7 @@ const MainRoutes = () => {
             <Route path='/logout' element={<PrivateRoutes><Logout /></PrivateRoutes>} />
             <Route path='/shared-with-me' element={<PrivateRoutes><SharedWithMe /></PrivateRoutes>} />
             <Route path='/shared-by-me' element={<PrivateRoutes><SharedByMe /></PrivateRoutes>} />
+            <Route path='/bin' element={<PrivateRoutes><Bin /></PrivateRoutes>} />
         </Routes>
     )
 }

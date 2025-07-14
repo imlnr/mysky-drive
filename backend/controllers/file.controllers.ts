@@ -1,3 +1,4 @@
+import { getAccessibleFiles } from "../utils/permission.utils";
 import { Request, Response } from "express";
 import fileModel from "../models/file.models";
 
@@ -48,17 +49,20 @@ export const addFilesToFolder = async (req: Request, res: Response) => {
     }
 }
 
+
 export const getFiles = async (req: Request, res: Response) => {
     const userId = req.body.userID;
     try {
         const folderId = req.params.folderId;
-        const files = await fileModel.find({ folderId: folderId, owner: userId });
+        const files = await getAccessibleFiles(userId, folderId);
         res.status(200).json({ files });
     } catch (error: any) {
         console.error("Error getting files:", error);
         res.status(500).json({ msg: "Error getting files", error: error.message });
     }
 }
+import { checkFileAccess } from "../utils/permission.utils";
+
 export const deleteFile = async (req: Request, res: Response) => {
     const { fileIds } = req.body; // Expecting an array of file IDs in the request body
     const userId = req.body.userID;
@@ -68,10 +72,19 @@ export const deleteFile = async (req: Request, res: Response) => {
     }
 
     try {
-        const result = await fileModel.deleteMany({ _id: { $in: fileIds }, owner: userId });
+        let deletedCount = 0;
+
+        for (const fileId of fileIds) {
+            const access = await checkFileAccess(fileId, userId, 'delete');
+            if (access.hasAccess) {
+                await fileModel.findByIdAndDelete(fileId);
+                deletedCount++;
+            }
+        }
+
         res.status(200).json({
             msg: "Files deleted successfully",
-            deletedCount: result.deletedCount
+            deletedCount
         });
     } catch (error: any) {
         console.error("Error deleting files:", error);
@@ -84,6 +97,11 @@ export const updateFile = async (req: Request, res: Response) => {
         const fileId = req.params.fileId;
         const { name, description, isPublic } = req.body;
         const userId = req.body.userID;
+
+        const access = await checkFileAccess(fileId, userId, 'write');
+        if (!access.hasAccess) {
+            return res.status(403).json({ msg: "You don't have permission to update this file" });
+        }
 
         const file = await fileModel.findByIdAndUpdate(fileId, { name, description, isPublic }, { new: true });
         res.status(200).json({ file });

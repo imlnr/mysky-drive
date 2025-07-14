@@ -3,6 +3,7 @@ import React from "react"
 import {
     HomeIcon,
     Share2Icon,
+    TrashIcon,
 } from "lucide-react"
 import {
     Sidebar,
@@ -39,6 +40,11 @@ const navMain = [
             },
         ],
         icon: Share2Icon,
+    },
+    {
+        title: "Bin",
+        url: "/bin",
+        icon: TrashIcon,
     },
 ]
 

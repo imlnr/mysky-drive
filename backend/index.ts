@@ -5,6 +5,7 @@ import connectDB from './config/db';
 import { folderRouter } from './routes/folders.routes';
 import uploadRouter from './routes/upload.routes';
 import fileRouter from './routes/file.routes';
+import shareRouter from './routes/share.routes';
 const app = express()
 
 app.use(cors());
@@ -13,6 +14,7 @@ app.use("/users", userRouter);
 app.use("/folders", folderRouter);
 app.use("/upload", uploadRouter);
 app.use("/files", fileRouter);
+app.use("/shares", shareRouter);
 app.get("/", (req, res) => {
     res.json({ msg: "Hello World" })
 })

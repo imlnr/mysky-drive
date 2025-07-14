@@ -8,6 +8,8 @@ const fileSchema = new mongoose.Schema({
     type: { type: String, required: true },
     url: { type: String, required: true },
     imagekitFileId: { type: String, required: true },
+    isDeleted: { type: Boolean, default: false },
+    deletedAt: { type: Date, default: null },
     isPublic: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
