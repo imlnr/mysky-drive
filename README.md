@@ -1,191 +1,111 @@
----
+# MySky Drive Monorepo
 
-```markdown
-# 🌤️ SkyDrive
-
-SkyDrive is a modern and secure file management system—like your personal Google Drive clone. Upload, manage, organize, and share your files and folders in a clean and intuitive interface. Built using the MERN stack, SkyDrive features user authentication, folder hierarchy, file previews, trash bin with auto-deletion, and cloud file storage with ImageKit.
+A modern cloud drive application with advanced file and folder sharing, built as a monorepo with separate `frontend` (React + Vite + TypeScript) and `backend` (Node.js + Express + MongoDB) projects.
 
 ---
 
-## 📁 Monorepo Structure
+## Table of Contents
+
+- [Project Structure](#project-structure)
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Backend Setup](#backend-setup)
+  - [Frontend Setup](#frontend-setup)
+- [Sharing Feature Overview](#sharing-feature-overview)
+- [API Documentation](#api-documentation)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Project Structure
 
 ```
-
-SkyDrive/
-├── frontend/       # React + Vite + Tailwind CSS app
-└── backend/        # Node.js + Express + MongoDB API
-
-````
-
----
-
-## 🚀 Features
-
-- 🔐 Authentication (JWT-based login/register)
-- 📂 Create nested folders & upload multiple files
-- 📁 Folder & file previews
-- 🗑️ Soft delete with a 7-day restore period (Trash Bin)
-- 🧹 Bulk delete & cleanup for expired items
-- ☁️ File hosting with ImageKit
-- 📧 SMTP support for notifications (optional)
-
----
-
-## 🛠️ Tech Stack
-
-**Frontend:**
-
-- React + Vite
-- Tailwind CSS + ShadCN UI
-- Axios, React Router DOM
-
-**Backend:**
-
-- Node.js + Express
-- MongoDB + Mongoose
-- ImageKit SDK
-- Nodemailer
-- dotenv, jsonwebtoken, multer
-
----
-
-## 📦 Installation
-
-### Prerequisites
-
-- Node.js v18+
-- MongoDB (cloud/local)
-- ImageKit account
-- SMTP credentials (for email features)
-
----
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/your-username/skydrive.git
-cd skydrive
-````
-
----
-
-### 2. Setup Backend
-
-```bash
-cd backend
-npm install
-```
-
-Create a `.env` file inside the `backend` directory:
-
-```
-PORT=4500
-
-# JWT
-JWT_SECRET=your_jwt_secret_key
-JWT_ISSUER=your_jwt_issuer
-JWT_EXPIRATION=1h
-
-# MongoDB
-MONGO_URI=mongodb+srv://your_username:your_password@cluster.mongodb.net/skydrive?retryWrites=true&w=majority
-
-# Email (SMTP)
-SMTP_USER=your_email@gmail.com
-SMTP_PASS=your_smtp_password
-
-# ImageKit
-IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key
-IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
-IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your_imagekit_id
-```
-
-Then run:
-
-```bash
-npm run dev
+/
+├── backend/   # Node.js, Express, MongoDB API
+├── frontend/  # React, Vite, TypeScript client
 ```
 
 ---
 
-### 3. Setup Frontend
+## Features
 
-```bash
-cd ../frontend
-npm install
-npm run dev
-```
-
-Make sure your frontend `.env` (if needed) points to the correct backend URL:
-
-```
-VITE_API_URL=http://localhost:4500
-```
+- User authentication (JWT)
+- File and folder management
+- **Advanced sharing:**
+  - Share with users by email
+  - Public links (with optional password & expiration)
+  - Granular permissions (read, write, delete, share)
+  - Manage/revoke access
+- Audit logging, soft deletes, and more
 
 ---
 
-## 🔄 Folder & File System Design
+## Getting Started
 
-- Files and folders are stored in MongoDB with references to their parent folder and owner.
-- Soft deletes add a `deletedAt` timestamp.
-- Trash bin fetches both deleted files and folders.
-- After 7 days, they are permanently removed by a scheduled job or admin action.
+### Backend Setup
 
----
+1. `cd backend`
+2. `npm install`
+3. Set environment variables:
+   - `JWT_SECRET`
+   - `FRONTEND_URL` (optional, for public links)
+4. `npm run dev`
+5. API runs on `http://localhost:4500`
 
-## 📂 Example API Structure
+### Frontend Setup
 
-| Method | Endpoint            | Description            |
-| ------ | ------------------- | ---------------------- |
-| POST   | `/users/register`   | Register a new user    |
-| POST   | `/users/login`      | Login existing user    |
-| POST   | `/folders`          | Create a folder        |
-| POST   | `/files/upload`     | Upload files           |
-| GET    | `/files/folder/:id` | Get files in folder    |
-| DELETE | `/files/:id`        | Move file to trash     |
-| DELETE | `/trash/deleteAll`  | Permanently delete all |
+1. `cd frontend`
+2. `npm install`
+3. `npm run dev`
+4. App runs on `http://localhost:3000`
 
 ---
 
-## 🧪 Sample Trash Bin Logic
+## Sharing Feature Overview
 
-- Files/folders marked with `deletedAt`
-- API checks whether 7 days have passed since deletion
-- If yes, they’re permanently deleted (can be scheduled using a CRON job)
+- Share files/folders with users or via public links
+- Set permissions: read, write, delete, share
+- Password-protect and/or set expiration for public links
+- Manage all shares (view, update, revoke)
+- All sharing actions are permission-checked and logged
 
----
-
-## 📸 Demo
-
-*Coming soon...*
+**See [`backend/SHARING_FEATURE_README.md`](backend/SHARING_FEATURE_README.md) for full details.**
 
 ---
 
-## 🤝 Contributing
+## API Documentation
 
-Pull requests are welcome. For major changes, please open an issue first to discuss your ideas.
+- All endpoints require JWT authentication unless public link
+- Key endpoints:
+  - `POST /shares/share` — Share with user
+  - `POST /shares/public-link` — Create public link
+  - `GET /shares/shared-with-me` — Items shared with you
+  - `GET /shares/shared-by-me` — Items you shared
+  - `PUT /shares/permissions/:shareId` — Update permissions
+  - `DELETE /shares/remove/:shareId` — Remove share
+  - `POST /shares/access/:publicLink` — Access via public link
 
----
-
-## 📝 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-## 📧 Contact
-
-Created by [M Laxminarayan Reddy](https://github.com/your-username)
-For inquiries, contact: `bablureddy553@gmail.com`
+**See [`backend/SHARE_API_DOCUMENTATION.md`](backend/SHARE_API_DOCUMENTATION.md) for full API details and example requests/responses.**
 
 ---
 
-```
+## Contributing
 
-Let me know if you want:
+1. Fork the repo
+2. Create a feature branch
+3. Commit your changes
+4. Open a pull request
 
-- CRON job example for auto-delete  
-- Sample frontend UI preview section  
-- GitHub badges and actions  
-- Docker setup  
-I can enhance the README further as needed.
-```
+---
+
+## License
+
+MIT
+
+---
+
+### Notes
+
+- For advanced ESLint/TypeScript setup, see [`frontend/README.md`](frontend/README.md).
+- For sharing feature test scripts, see `backend/test-share-api.js`.
