@@ -12,7 +12,7 @@ import {
     ContextMenuRadioItem,
 } from '@/components/ui/context-menu';
 import { useNavigate } from 'react-router-dom';
-import { FolderIcon } from 'lucide-react';
+import { DownloadIcon, FolderIcon, FolderOpenIcon, PencilIcon, Share2, Trash2 } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { deleteFolder, updateFolder } from '@/redux/AppReducer/action';
 import type { Folder } from '@/lib/types';
@@ -135,12 +135,12 @@ const FolderCard = ({ folder }: { folder: Folder }) => {
                 <ContextMenuContent>
                     <ContextMenuLabel>Folder Actions</ContextMenuLabel>
                     <ContextMenuSeparator />
-                    <ContextMenuItem onClick={() => navigate(`/mydrive/${folder._id}`)}>Open</ContextMenuItem>
-                    <ContextMenuItem onClick={handleRenameClick}>Rename</ContextMenuItem>
-                    <ContextMenuItem onClick={() => setDeleteAlert(true)} variant="destructive">Delete</ContextMenuItem>
-                    <ContextMenuItem onClick={() => { }}>Download</ContextMenuItem>
+                    <ContextMenuItem onClick={() => navigate(`/mydrive/${folder._id}`)}><FolderOpenIcon />Open</ContextMenuItem>
+                    <ContextMenuItem onClick={handleRenameClick}><PencilIcon />Rename</ContextMenuItem>
+                    <ContextMenuItem onClick={() => setDeleteAlert(true)} variant="destructive"><Trash2 />Move to Bin</ContextMenuItem>
+                    <ContextMenuItem onClick={() => { }}><DownloadIcon />Download</ContextMenuItem>
                     <ContextMenuSeparator />
-                    <ContextMenuItem onClick={() => alert(`Share ${folder.name}`)}>Share</ContextMenuItem>
+                    <ContextMenuItem onClick={() => alert(`Share ${folder.name}`)}><Share2 />Share</ContextMenuItem>
 
                     <ContextMenuSub>
                         <ContextMenuSubTrigger>Change Color</ContextMenuSubTrigger>

@@ -6,6 +6,7 @@ import { folderRouter } from './routes/folders.routes';
 import uploadRouter from './routes/upload.routes';
 import fileRouter from './routes/file.routes';
 import shareRouter from './routes/share.routes';
+import binRouter from './routes/bin.routes';
 const app = express()
 
 app.use(cors());
@@ -15,6 +16,7 @@ app.use("/folders", folderRouter);
 app.use("/upload", uploadRouter);
 app.use("/files", fileRouter);
 app.use("/shares", shareRouter);
+app.use("/bin", binRouter);
 app.get("/", (req, res) => {
     res.json({ msg: "Hello World" })
 })

@@ -40,6 +40,7 @@ export interface AppState {
     isLoginLoading: boolean;
     folders: Folder[];
     files: File[];
+    trashedItems: (File | Folder)[];
     currentFolder: Folder | null;
     currentFile: File | null;
     currentFolderId: string | null;

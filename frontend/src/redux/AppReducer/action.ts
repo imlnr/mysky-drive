@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import type { Dispatch } from "redux";
-import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, DELETE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS, GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, UPDATE_FOLDER_SUCCESS, UPLOAD_FILES_REQUEST, UPLOAD_FILES_SUCCESS, UPLOAD_FILES_FAILURE, GET_FILES_SUCCESS, DELETE_FILE_SUCCESS, UPDATE_FILE_SUCCESS } from "./action-types";
+import { CREATE_FOLDER_FAILURE, CREATE_FOLDER_REQUEST, CREATE_FOLDER_SUCCESS, SOFT_DELETE_FOLDER_SUCCESS, GET_FOLDERS_SUCCESS, GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, UPDATE_FOLDER_SUCCESS, UPLOAD_FILES_REQUEST, UPLOAD_FILES_SUCCESS, UPLOAD_FILES_FAILURE, GET_FILES_SUCCESS, UPDATE_FILE_SUCCESS, SOFT_DELETE_FILE_SUCCESS, GET_TRASHED_ITEMS_REQUEST, GET_TRASHED_ITEMS_SUCCESS, GET_TRASHED_ITEMS_FAILURE, RESTORE_FOLDER_SUCCESS } from "./action-types";
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -126,7 +126,7 @@ export const deleteFolder = (folderID: string) => async (dispatch: Dispatch) => 
     try {
         const response = await axios.delete(`${url}/folders/delete-folder/${folderID}`, { headers: getHeaders() });
         if (response.data) {
-            dispatch({ type: DELETE_FOLDER_SUCCESS, payload: folderID });
+            dispatch({ type: SOFT_DELETE_FOLDER_SUCCESS, payload: folderID });
             return response.data;
         }
     } catch (error: any) {
@@ -210,7 +210,7 @@ export const deleteFile = (fileIds: string[]) => async (dispatch: Dispatch) => {
     try {
         const response = await axios.delete(`${url}/files/delete-file`, { data: { fileIds }, headers: getHeaders() });
         if (response.data) {
-            dispatch({ type: DELETE_FILE_SUCCESS, payload: fileIds });
+            dispatch({ type: SOFT_DELETE_FILE_SUCCESS, payload: fileIds });
             return response.data;
         }
     } catch (error: any) {
@@ -228,5 +228,46 @@ export const updateFile = (fileId: string, updateData: any) => async (dispatch: 
         }
     } catch (error: any) {
         dispatch({ type: UPLOAD_FILES_FAILURE, payload: error.msg });
+    }
+}
+
+export const softDeleteFolder = (folders: string[], files: string[]) => async (dispatch: Dispatch) => {
+    try {
+        const response = await axios.put(`${url}/bin/soft-delete/all`, { folders, files }, { headers: getHeaders() });
+        if (response.data) {
+            dispatch({ type: SOFT_DELETE_FOLDER_SUCCESS, payload: folders });
+            dispatch({ type: SOFT_DELETE_FILE_SUCCESS, payload: files });
+            return response.data;
+        }
+    } catch (error: any) {
+        dispatch({ type: UPLOAD_FILES_FAILURE, payload: error.msg });
+    }
+}
+export const restoreFolder = (folders: string[], files: string[]) => async (dispatch: Dispatch) => {
+    try {
+        const response = await axios.put(`${url}/bin/restore/all`, { folders, files }, { headers: getHeaders() });
+        if (response.data) {
+            dispatch({ type: RESTORE_FOLDER_SUCCESS, payload: folders });
+            // dispatch({ type: RESTORE_FILE_SUCCESS, payload: files });
+            return response.data;
+        }
+    } catch (error: any) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export const getTrashedItems = () => async (dispatch: Dispatch) => {
+    dispatch({ type: GET_TRASHED_ITEMS_REQUEST });
+    try {
+        const response = await axios.get(`${url}/bin/get-trashed-items`, { headers: getHeaders() });
+        if (response.data) {
+            dispatch({ type: GET_TRASHED_ITEMS_SUCCESS, payload: response.data?.trashedFiles });
+            return response.data;
+        }
+    } catch (error: any) {
+        console.log(error);
+        dispatch({ type: GET_TRASHED_ITEMS_FAILURE, payload: error.msg });
+        throw error;
     }
 }

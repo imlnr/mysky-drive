@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import SidebarWrapper from '@/features/sidebar/Sidebar'
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Trash2, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
