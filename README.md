@@ -1,23 +1,19 @@
-Absolutely! Here's a detailed and professional `README.md` file tailored for your **SkyDrive** project, structured as a monorepo with `frontend` and `backend` directories:
-
 ---
 
 ```markdown
 # 🌤️ SkyDrive
 
-**SkyDrive** is a cloud-based file management system built using the MERN stack. Inspired by platforms like Google Drive, it provides users with the ability to upload, organize, preview, and delete files and folders. The project is structured as a **monorepo** with separate folders for the **frontend** and **backend**.
+SkyDrive is a modern and secure file management system—like your personal Google Drive clone. Upload, manage, organize, and share your files and folders in a clean and intuitive interface. Built using the MERN stack, SkyDrive features user authentication, folder hierarchy, file previews, trash bin with auto-deletion, and cloud file storage with ImageKit.
 
 ---
 
-## 📁 Project Structure
+## 📁 Monorepo Structure
 
 ```
 
-skydrive/
-│
-├── frontend/    # React + TypeScript + Tailwind CSS app
-├── backend/     # Node.js + Express + MongoDB + TypeScript server
-└── README.md
+SkyDrive/
+├── frontend/       # React + Vite + Tailwind CSS app
+└── backend/        # Node.js + Express + MongoDB API
 
 ````
 
@@ -25,56 +21,85 @@ skydrive/
 
 ## 🚀 Features
 
-- ✅ User authentication (JWT-based)
-- 📂 Create nested folders
-- 📁 Upload single/multiple files
-- 🗃️ Organize files by folder
-- 🗑️ Soft delete with recycle bin (auto-deletes after 7 days)
-- 🔎 File/folder previews and metadata
-- 🌈 Folder color customization
-- 💡 Clean and modern UI using TailwindCSS and ShadCN
+- 🔐 Authentication (JWT-based login/register)
+- 📂 Create nested folders & upload multiple files
+- 📁 Folder & file previews
+- 🗑️ Soft delete with a 7-day restore period (Trash Bin)
+- 🧹 Bulk delete & cleanup for expired items
+- ☁️ File hosting with ImageKit
+- 📧 SMTP support for notifications (optional)
 
 ---
 
-## 🧑‍💻 Tech Stack
+## 🛠️ Tech Stack
 
-| Layer     | Tech                                |
-|-----------|--------------------------------------|
-| Frontend  | React, TypeScript, Tailwind CSS, Axios, ShadCN |
-| Backend   | Node.js, Express, TypeScript, MongoDB, Mongoose |
-| Auth      | JSON Web Tokens (JWT), Bcrypt        |
-| Storage   | Filesystem / Cloud (configurable)    |
-| State     | Zustand / Redux (based on your choice) |
+**Frontend:**
 
----
+- React + Vite
+- Tailwind CSS + ShadCN UI
+- Axios, React Router DOM
 
-## 🛠️ Setup Instructions
+**Backend:**
 
-### 🔧 Prerequisites
-
-- Node.js (v18+)
-- MongoDB (local or Atlas)
-- npm / yarn
-- `.env` files for both frontend and backend
+- Node.js + Express
+- MongoDB + Mongoose
+- ImageKit SDK
+- Nodemailer
+- dotenv, jsonwebtoken, multer
 
 ---
 
-### 📦 Backend Setup
+## 📦 Installation
+
+### Prerequisites
+
+- Node.js v18+
+- MongoDB (cloud/local)
+- ImageKit account
+- SMTP credentials (for email features)
+
+---
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/skydrive.git
+cd skydrive
+````
+
+---
+
+### 2. Setup Backend
 
 ```bash
 cd backend
 npm install
-````
+```
 
-#### Create `.env` file
+Create a `.env` file inside the `backend` directory:
 
-```env
+```
 PORT=4500
-MONGO_URI=mongodb://localhost:27017/skydrive
-JWT_SECRET=your_jwt_secret
+
+# JWT
+JWT_SECRET=your_jwt_secret_key
+JWT_ISSUER=your_jwt_issuer
+JWT_EXPIRATION=1h
+
+# MongoDB
+MONGO_URI=mongodb+srv://your_username:your_password@cluster.mongodb.net/skydrive?retryWrites=true&w=majority
+
+# Email (SMTP)
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_smtp_password
+
+# ImageKit
+IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key
+IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
+IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your_imagekit_id
 ```
 
-#### Run the server
+Then run:
 
 ```bash
 npm run dev
@@ -82,86 +107,85 @@ npm run dev
 
 ---
 
-### 💻 Frontend Setup
+### 3. Setup Frontend
 
 ```bash
-cd frontend
+cd ../frontend
 npm install
-```
-
-#### Create `.env` file
-
-```env
-VITE_BACKEND_URL=http://localhost:4500
-```
-
-#### Start the app
-
-```bash
 npm run dev
 ```
 
----
+Make sure your frontend `.env` (if needed) points to the correct backend URL:
 
-## 📸 Screenshots
-
-> *Coming soon...*
-
----
-
-## 📁 API Overview
-
-> A detailed API documentation is available [here](link-if-you-have-postman-doc-or-md-file)
-
-Example endpoints:
-
-* `POST /users/register` - Register user
-* `POST /users/login` - Login user
-* `POST /files/upload` - Upload file(s)
-* `DELETE /files/:id` - Soft delete file
-* `GET /bin` - Fetch all soft-deleted items
-* `DELETE /bin` - Bulk delete files/folders from bin
+```
+VITE_API_URL=http://localhost:4500
+```
 
 ---
 
-## 🚮 Recycle Bin Logic
+## 🔄 Folder & File System Design
 
-* When a file or folder is deleted, it's **soft-deleted** (moved to bin)
-* After **7 days**, items are **automatically and permanently deleted**
-* Users can manually **restore** or **permanently delete** items from the bin
+- Files and folders are stored in MongoDB with references to their parent folder and owner.
+- Soft deletes add a `deletedAt` timestamp.
+- Trash bin fetches both deleted files and folders.
+- After 7 days, they are permanently removed by a scheduled job or admin action.
+
+---
+
+## 📂 Example API Structure
+
+| Method | Endpoint            | Description            |
+| ------ | ------------------- | ---------------------- |
+| POST   | `/users/register`   | Register a new user    |
+| POST   | `/users/login`      | Login existing user    |
+| POST   | `/folders`          | Create a folder        |
+| POST   | `/files/upload`     | Upload files           |
+| GET    | `/files/folder/:id` | Get files in folder    |
+| DELETE | `/files/:id`        | Move file to trash     |
+| DELETE | `/trash/deleteAll`  | Permanently delete all |
+
+---
+
+## 🧪 Sample Trash Bin Logic
+
+- Files/folders marked with `deletedAt`
+- API checks whether 7 days have passed since deletion
+- If yes, they’re permanently deleted (can be scheduled using a CRON job)
+
+---
+
+## 📸 Demo
+
+*Coming soon...*
 
 ---
 
 ## 🤝 Contributing
 
-Want to contribute? Feel free to fork the project, open issues, or submit PRs!
+Pull requests are welcome. For major changes, please open an issue first to discuss your ideas.
 
 ---
 
-## 📃 License
+## 📝 License
 
 This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-## 🙋‍♂️ Author
+## 📧 Contact
 
-**M Laxminarayan Reddy**
-Full Stack Web Developer
-[LinkedIn](https://www.linkedin.com/in/your-profile) • [GitHub](https://github.com/your-github) • [Portfolio](https://your-portfolio.com)
+Created by [M Laxminarayan Reddy](https://github.com/your-username)
+For inquiries, contact: `bablureddy553@gmail.com`
 
 ---
-
-> *SkyDrive — your personal cloud file manager, reimagined.*
 
 ```
 
----
+Let me know if you want:
 
-Let me know if you want me to:
-- Add badges (build, license, tech stack).
-- Create a separate API docs markdown.
-- Add Postman Collection or GitHub Actions setup.
-
-Would you like this saved as a `.md` file for download?
+- CRON job example for auto-delete  
+- Sample frontend UI preview section  
+- GitHub badges and actions  
+- Docker setup  
+I can enhance the README further as needed.
 ```
