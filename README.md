@@ -47,9 +47,15 @@ A modern cloud drive application with advanced file and folder sharing, built as
 
 1. `cd backend`
 2. `npm install`
-3. Set environment variables:
-   - `JWT_SECRET`
-   - `FRONTEND_URL` (optional, for public links)
+3. Create a `.env` file in the `backend` directory with the following dummy values:
+
+   ```env
+   JWT_SECRET=your_jwt_secret_here
+   FRONTEND_URL=http://localhost:3000
+   MONGODB_URI=mongodb://localhost:27017/myskydrive
+   # Add any other required backend environment variables here
+   ```
+
 4. `npm run dev`
 5. API runs on `http://localhost:4500`
 
@@ -57,8 +63,16 @@ A modern cloud drive application with advanced file and folder sharing, built as
 
 1. `cd frontend`
 2. `npm install`
-3. `npm run dev`
-4. App runs on `http://localhost:3000`
+3. Create a `.env` file in the `frontend` directory with the following dummy values:
+
+   ```env
+   VITE_API_URL=http://localhost:4500
+   VITE_APP_NAME=MySkyDrive
+   # Add any other required frontend environment variables here
+   ```
+
+4. `npm run dev`
+5. App runs on `http://localhost:3000`
 
 ---
 
