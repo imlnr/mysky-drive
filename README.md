@@ -50,10 +50,17 @@ A modern cloud drive application with advanced file and folder sharing, built as
 3. Create a `.env` file in the `backend` directory with the following dummy values:
 
    ```env
-   JWT_SECRET=your_jwt_secret_here
-   FRONTEND_URL=http://localhost:3000
-   MONGODB_URI=mongodb://localhost:27017/myskydrive
-   # Add any other required backend environment variables here
+    PORT=add your port name
+    JWT_SECRET=add your jwt secret
+    JWT_ISSUER=add your jwt issuer
+    JWT_EXPIRATION=your expiration time
+    MONGO_URI=your mongodb uri here
+    SMTP_PASS=add your smtp pass
+    SMTP_USER=add your smtp user
+    IMAGEKIT_PUBLIC_KEY=add your key here
+    IMAGEKIT_PRIVATE_KEY=add your key here
+    IMAGEKIT_URL_ENDPOINT=add your key here
+    # Add any other required backend environment variables her
    ```
 
 4. `npm run dev`
@@ -66,9 +73,10 @@ A modern cloud drive application with advanced file and folder sharing, built as
 3. Create a `.env` file in the `frontend` directory with the following dummy values:
 
    ```env
-   VITE_API_URL=http://localhost:4500
-   VITE_APP_NAME=MySkyDrive
-   # Add any other required frontend environment variables here
+    VITE_GOOGLE_CLIENT_ID=your_google_client_id
+    VITE_GOOGLE_CLIENT_SECRET=your_google_client_secret
+    VITE_API_URL=your backend running url
+    # Add any other required frontend environment variables here
    ```
 
 4. `npm run dev`
