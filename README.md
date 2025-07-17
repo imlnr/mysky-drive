@@ -46,10 +46,6 @@ A modern cloud drive application with advanced file and folder sharing, built as
 - Frontend:[https://skydrive-six.vercel.app/](https://skydrive-six.vercel.app/)
 - Backend API: [https://mysky-drive.onrender.com](https://mysky-drive.onrender.com)
 
-## Video Presentation
-
--- [presentation](https://www.loom.com/share/721b3c2671e4428eb36b3aa9275682c8?sid=6b6c50cc-1551-4a02-8bf9-a47a33d4fd83)
-
 ## 📸 Screenshots
 
 #### Landing Page
